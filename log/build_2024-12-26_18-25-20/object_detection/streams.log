@@ -1,0 +1,18 @@
+[0.452s] Invoking command in '/home/g1/ros2_c2_ws/build/object_detection': PYTHONPATH=/home/g1/ros2_c2_ws/build/object_detection/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/g1/ros2_c2_ws/install/object_detection/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/g1/ros2_c2_ws/build/object_detection/build --no-deps symlink_data
+[0.667s] running develop
+[0.807s] running egg_info
+[0.817s] writing object_detection.egg-info/PKG-INFO
+[0.818s] writing dependency_links to object_detection.egg-info/dependency_links.txt
+[0.818s] writing entry points to object_detection.egg-info/entry_points.txt
+[0.818s] writing requirements to object_detection.egg-info/requires.txt
+[0.818s] writing top-level names to object_detection.egg-info/top_level.txt
+[0.855s] reading manifest file 'object_detection.egg-info/SOURCES.txt'
+[0.856s] writing manifest file 'object_detection.egg-info/SOURCES.txt'
+[0.866s] running build_ext
+[0.866s] Creating /home/g1/ros2_c2_ws/install/object_detection/lib/python3.10/site-packages/object-detection.egg-link (link to .)
+[0.867s] Installing check_drone script to /home/g1/ros2_c2_ws/install/object_detection/lib/object_detection
+[0.867s] Installing sub_compress_image script to /home/g1/ros2_c2_ws/install/object_detection/lib/object_detection
+[0.867s] 
+[0.867s] Installed /home/g1/ros2_c2_ws/build/object_detection
+[0.867s] running symlink_data
+[0.898s] Invoked command in '/home/g1/ros2_c2_ws/build/object_detection' returned '0': PYTHONPATH=/home/g1/ros2_c2_ws/build/object_detection/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/g1/ros2_c2_ws/install/object_detection/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/g1/ros2_c2_ws/build/object_detection/build --no-deps symlink_data

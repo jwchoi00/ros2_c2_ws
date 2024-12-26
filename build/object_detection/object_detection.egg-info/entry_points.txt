@@ -1,0 +1,3 @@
+[console_scripts]
+check_drone = object_detection.check_drone:main
+sub_compress_image = object_detection.sub_compress_image:main
