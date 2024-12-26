@@ -6,26 +6,17 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 # from moveit_interfaces.msg import DetectionArray, Detection
-import json
 
 class CompressedImageSubscriber(Node):
     def __init__(self):
         super().__init__('check_drone')
         # 사전에 생성한 YOLO모델을 불러오기
-        self.model = YOLO("/home/g1/ros2_c2_ws/src/object_detection/resource/best.pt")
+        self.model = YOLO("/home/g1/ros2_c2_ws/src/object_detection/resource/best_ver2.pt")
 
         # # Camera 왜곡 보정 파라메터
         # self.K = np.array([[1537.87246, 0, 656.024384], [0, 1570.34693, 618.027499], [0, 0, 1]])
         # self.d = np.array([0.156609014, -0.487498585, 0.0537193345, 0.00294416872, 3.06628289])
-
-        # # 이미지 받아오기
-        # self.subscription = self.create_subscription(
-        #     CompressedImage,
-        #     'compressed_image',
-        #     self.image_callback,
-        #     10
-        # )
-        self.cap = cv2.VideoCapture(2) #set to USB Camera
+        self.cap = cv2.VideoCapture(2) #USB camera Read
         self.cap.set(3, 640)
         self.cap.set(4, 480)
         # # yolo 결과값 전송
