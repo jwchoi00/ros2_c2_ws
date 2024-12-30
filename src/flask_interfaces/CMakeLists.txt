@@ -18,7 +18,6 @@ set(srv_files
   "srv/HuntState.srv"
   "srv/HomeIn.srv"
 )
-
 rosidl_generate_interfaces(${PROJECT_NAME}
     ${srv_files}
     DEPENDENCIES builtin_interfaces geometry_msgs

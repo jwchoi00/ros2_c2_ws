@@ -38,7 +38,7 @@ def load_user(user_id):
     return User(user_id)
 
 # SQLite 데이터베이스 경로 설정
-DB_PATH = '/home/g1/ros2_c2_ws/src/flask_ros_app/resource/captured_images.db'
+DB_PATH = '/home/g1/ros2_c2_ws/src/flask_ros_app/resource/car_captured_images.db'
 
 # 메인 페이지
 @app.route("/", methods=["GET", "POST"])
