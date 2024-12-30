@@ -19,7 +19,7 @@ setup(
     #tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'flask_ros_app = flask_ros_app.app:main',
+            'ros2_flask_sub_image_with_db = flask_ros_app.ros2_flask_sub_image_with_db:main',
             'sub_msgs = flask_ros_app.sub_msgs:main',
             'sqlite3_save = flask_ros_app.sqlite3_save:main',
         ],
