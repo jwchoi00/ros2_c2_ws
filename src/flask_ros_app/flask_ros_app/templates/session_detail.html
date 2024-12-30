@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Details</title>
+</head>
+<body>
+    <h1>Tracking Session {{ session.tracking_session_id }}</h1>
+    <p>Status: {{ session.status }} | Start: {{ session.start_timestamp }} | End: {{ session.end_timestamp }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Timestamp</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product[0] }}</td>
+                    <td>{{ product[1] }}</td>
+                    <td>{{ product[2] }}</td>
+                    <td><a href="javascript:void(0);" onclick="openModal({{ product[0] }})">View Image</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- The Modal -->
+    <div id="imageModal" class="modal">
+        <!-- Modal Content -->
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" src="" alt="Captured Image" style="width: 100%; height: auto;">
+        </div>
+    </div>
+
+    <script>
+        // Function to open the modal and load the image
+        function openModal(imageId) {
+            var modal = document.getElementById("imageModal");
+            var modalImage = document.getElementById("modalImage");
+
+            // Set the image source dynamically based on the image ID
+            modalImage.src = "/image/" + imageId;
+            modal.style.display = "block";
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            var modal = document.getElementById("imageModal");
+            modal.style.display = "none";
+        }
+
+        // Close the modal if clicked outside of the modal content
+        window.onclick = function(event) {
+            var modal = document.getElementById("imageModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

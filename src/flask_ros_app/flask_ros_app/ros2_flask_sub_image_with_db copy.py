@@ -67,31 +67,53 @@ def get_system_stats():
     }
     return stats
 
+def get_db_connection():
+    conn = sqlite3.connect('/home/g1/ros2_c2_ws/src/flask_ros_app/resource/test_car_captured_images.db')
+    conn.row_factory = sqlite3.Row  # To access rows as dictionaries
+    return conn
+
 # log 페이지: 제품 정보와 이미지 목록 표시
 @app.route('/log')
 @login_required
 def log():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute('SELECT id, status, timestamp FROM CapturedImages')
-    products = cursor.fetchall()  # [(id, timestamp, name), ...]
+    conn = get_db_connection()
+    
+    # Query the database
+    sessions = conn.execute('SELECT * FROM TrackingSessions ORDER BY start_timestamp DESC').fetchall()
     conn.close()
-    return render_template('index_for_db.html', products=products)
+    return render_template('index_db.html', sessions=sessions)
+
+@app.route('/session/<int:tracking_session_id>')
+def session_detail(tracking_session_id):
+    conn = get_db_connection()
+    session = conn.execute('SELECT * FROM TrackingSessions WHERE tracking_session_id = ?',
+                           (tracking_session_id,)).fetchone()
+    images = conn.execute('SELECT * FROM CapturedImages WHERE tracking_session_id = ? ORDER BY timestamp',
+                          (tracking_session_id,)).fetchall()
+    conn.close()
+
+    # Convert rows to dictionaries and encode images to base64 for display
+    images = [dict(image) for image in images]
+    for image in images:
+        image['image'] = base64.b64encode(image['image']).decode('utf-8')
+
+    return render_template('session_detail.html', session=session, images=images)
+
 
 # 특정 이미지 표시
-@app.route('/image/<int:image_id>')
-@login_required
-def get_image(image_id):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute('SELECT image FROM CapturedImages WHERE id = ?', (image_id,))
-    result = cursor.fetchone()
-    conn.close()
-    if result:
-        # BLOB 데이터를 이미지로 반환
-        return send_file(io.BytesIO(result[0]), mimetype='image/jpeg')
-    else:
-        return "Image not found", 404
+# @app.route('/image/<int:image_id>')
+# @login_required
+# def get_image(image_id):
+#     conn = sqlite3.connect(DB_PATH)
+#     cursor = conn.cursor()
+#     cursor.execute('SELECT image FROM CapturedImages WHERE id = ?', (image_id,))
+#     result = cursor.fetchone()
+#     conn.close()
+#     if result:
+#         # BLOB 데이터를 이미지로 반환
+#         return send_file(io.BytesIO(result[0]), mimetype='image/jpeg')
+#     else:
+#         return "Image not found", 404
 
 # 시스템 모니터링 페이지
 @app.route("/sysmon", methods=["GET"])

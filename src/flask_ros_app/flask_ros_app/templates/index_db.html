@@ -1,0 +1,19 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>Tracking Sessions</h1>
+<form action="/start_tracking" method="POST">
+    <button type="submit">Start New Tracking</button>
+</form>
+<ul>
+    {% for session in sessions %}
+        <li>
+            <a href="{{ url_for('session_detail', tracking_session_id=session.tracking_session_id) }}">
+                Session ID: {{ session.tracking_session_id }} | Status: {{ session.status }} | Start: {{ session.start_timestamp }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
