@@ -1,1 +1,0 @@
-/home/g1/ros2_c2_ws/src/object_detection/setup.py

@@ -16,7 +16,7 @@ class CompressedImageSubscriber(Node):
         # # Camera 왜곡 보정 파라메터
         # self.K = np.array([[1537.87246, 0, 656.024384], [0, 1570.34693, 618.027499], [0, 0, 1]])
         # self.d = np.array([0.156609014, -0.487498585, 0.0537193345, 0.00294416872, 3.06628289])
-        self.cap = cv2.VideoCapture(2) #USB camera Read
+        self.cap = cv2.VideoCapture(0) #USB camera Read
         self.cap.set(3, 640)
         self.cap.set(4, 480)
         # # yolo 결과값 전송

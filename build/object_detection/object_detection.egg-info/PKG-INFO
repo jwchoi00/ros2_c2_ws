@@ -1,9 +1,0 @@
-Metadata-Version: 2.1
-Name: object_detection
-Version: 0.0.0
-Summary: TODO: Package description
-Maintainer: g1
-Maintainer-email: jwchoi0017@gmail.com
-License: TODO: License declaration
-Requires-Dist: setuptools
-Requires-Dist: pytest

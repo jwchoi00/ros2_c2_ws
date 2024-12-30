@@ -1,0 +1,26 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h2>System Monitor</h2>
+<h3>CPU Usage: <span id="cpu_usage">{{ stats.cpu_usage }}%</span></h3>
+<h3>Memory Usage: <span id="memory_usage">{{ stats.memory_usage }}%</span></h3>
+<h3>Total Memory: <span id="total_memory">{{ stats.total_memory }} GB</span></h3>
+<h3>Disk Usage: <span id="disk_usage">{{ stats.disk_usage }}%</span></h3>
+<h3>Total Disk: <span id="total_disk">{{ stats.total_disk }} GB</span></h3>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  <!-- jQuery for AJAX -->
+<script>
+    function updateStats() {
+        $.get("/sysmon_stats", function(data) {
+            $('#cpu_usage').text(data.cpu_usage + '%');
+            $('#memory_usage').text(data.memory_usage + '%');
+            $('#total_memory').text(data.total_memory + ' GB');
+            $('#disk_usage').text(data.disk_usage + '%');
+            $('#total_disk').text(data.total_disk + ' GB');
+        });
+    }
+
+    // Update stats every 5 seconds
+    setInterval(updateStats, 1000);
+</script>
+{% endblock %}

@@ -1,0 +1,3 @@
+string state  # "놓침" or "포획"
+---
+bool success  # 요청 성공 여부
