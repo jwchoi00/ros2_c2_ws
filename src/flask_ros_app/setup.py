@@ -21,6 +21,7 @@ setup(
         'console_scripts': [
             'flask_ros_app = flask_ros_app.app:main',
             'sub_msgs = flask_ros_app.sub_msgs:main',
+            'sqlite3_save = flask_ros_app.sqlite3_save:main',
         ],
     },
 )

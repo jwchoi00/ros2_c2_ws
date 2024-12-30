@@ -47,6 +47,8 @@ class CompressedImageSubscriber(Node):
                     })
                     # 박스 그리기
                     cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
+                    if class_id == 0:
+                        class_id = 'car'
                     label = f"Class: {class_id}, Conf: {confidence:.2f}"
                     cv2.putText(frame, label, (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
             print(detection_data)

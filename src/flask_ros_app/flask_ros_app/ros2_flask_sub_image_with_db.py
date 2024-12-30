@@ -21,6 +21,9 @@ app.secret_key = "your_secret_key"  # 세션 관리를 위한 비밀 키
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+# 메인 함수
+node = None
+
 # 사용자 클래스를 정의 (Flask-Login과 연동)
 class User(UserMixin):
     def __init__(self, id):
@@ -64,7 +67,7 @@ def get_system_stats():
     }
     return stats
 
-# 메인 페이지: 제품 정보와 이미지 목록 표시
+# log 페이지: 제품 정보와 이미지 목록 표시
 @app.route('/log')
 @login_required
 def log():
@@ -194,8 +197,7 @@ def action():
 def start_flask():
     app.run(host='0.0.0.0', port=5000)
 
-# 메인 함수
-node = None
+
 
 def main(args=None):
     global node
