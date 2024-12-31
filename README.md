@@ -1,6 +1,7 @@
 # ros2_c2_ws
 
 - 주의사항
+
     ros2_flask_sub_image_with_db_final.py 안에 있는
   
     conn = sqlite3.connect('{경로 설정}/log_car_captured_images.db') 변경
