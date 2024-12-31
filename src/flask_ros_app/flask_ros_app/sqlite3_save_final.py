@@ -146,14 +146,14 @@ class CompressedImageSubscriber(Node):
         elif self.status in ["miss", "capture", "stop"]:
             self.get_logger().info(f"Saving final image with status: {self.status}")
             self.insert_captured_image(self.status, frame)
-            self.recording_active = False  # Stop recording after final status
-            self.tracking_session_id = None  # Reset session ID
+            self.recording_active = False  # 기록 멈춤
+            self.tracking_session_id = None  # 재탐지를 위한 session ID 초기화
         time.sleep(1.0)
 
     # 물체가 인식되었는지 판단하여 start_tracking
     def detection_callback(self, msg):
         self.center_point = [msg.centerx, msg.centery]
-        print(self.center_point)
+        # print(self.center_point)
         if self.center_point and self.center_point[0] != 0.0 and self.center_point[1] != 0.0:
             if not self.recording_active:
                 self.status = "start_tracking"
