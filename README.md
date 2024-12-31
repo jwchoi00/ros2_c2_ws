@@ -1,13 +1,15 @@
 # ros2_c2_ws
 
-- 현재 완성된 것
-    yolo로 인식하고 박스 그리기
-    center 좌표 추출하기
+- 주의사항
+    ros2_flask_sub_image_with_db_final.py 안에 있는
+  
+    conn = sqlite3.connect('{경로 설정}/log_car_captured_images.db') 변경
 
-- 실행 전 주의사항
-    self.model = YOLO("/home/g1/ros2_c2_ws/src/object_detection/resource/best.pt")  -> 경로 수정
+    sqlite3_save_fianl.py 안에 있는
 
+    self.conn = sqlite3.connect('{경로 설정}/log_car_captured_images.db', check_same_thread=False) 변경
+  
 - 실행 방법
   
-    ros2 run object_detection check_drone -> videocapture 해서 yolo로 판단한 이미지 전송
-    ros2 run object_detection sub_compress_img -> compress_image sub해서 띄우는 코드
+    ros2 run flask_ros_app ros2_flask_sub_image_with_db_final -> flask 실행 코드
+    ros2 run flask_ros_app sqlite3_save_final -> sqlite database를 생성 및 저장하는 코드
