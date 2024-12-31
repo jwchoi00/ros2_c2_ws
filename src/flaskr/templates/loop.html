@@ -1,0 +1,14 @@
+<html>
+  <body>
+    <ol>
+      {% for value in values %}
+      <li>{{ value }}</li>
+      {% endfor %}
+    </ol>
+    <ul>
+      {% for i in range(values | length) %}
+      <li>{{ values[i] }} : {{ loop.index }}번째</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

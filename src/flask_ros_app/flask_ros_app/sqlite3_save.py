@@ -67,13 +67,16 @@ class CompressedImageSubscriber(Node):
         if not self.recording_active:
             self.get_logger().info("Recording is inactive. Ignoring image...")
             return
+
         if self.status == "start_tracking":
             self.get_logger().info(f"Saving image with status: {self.status}")
             self.insert_captured_image(self.status, frame)
             self.status = "tracking"  # tracking이라는 로그로 이미지 저장
+
         elif self.status == "tracking":
             self.get_logger().info(f"Saving image with status: {self.status}")
             self.insert_captured_image(self.status, frame)
+
         elif self.status in ["miss", "capture", "3"]:
             self.get_logger().info(f"Saving final image with status: {self.status}")
             if self.status == '3':
@@ -84,7 +87,7 @@ class CompressedImageSubscriber(Node):
     #물체가 인식되었는지 판단하여 start_tracking
     def detection_callback(self, msg):
         self.center_point = [msg.centerx, msg.centery]
-        if self.center_point is not None:
+        if self.center_point is not None and self.center_point[0] != 0.0 and self.center_point[1] != 0.0:
             #self.get_logger().info(f"Center point detected: {self.center_point}")
             if not self.recording_active:
                 self.status = "start_tracking"

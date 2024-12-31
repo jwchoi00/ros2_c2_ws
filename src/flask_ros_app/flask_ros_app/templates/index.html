@@ -9,10 +9,11 @@
     <button onclick="missAction()">놓침</button>
     <button onclick="captureAction()">포획</button>
     <button onclick="returnAction()">복귀</button>
+
     <button onclick="homeoutAction()">창고나가기</button>
     <button onclick="startAction()">출발</button>
+    <button onclick="stopAction()">정지</button>
 </div>
-
 <script>
     // JavaScript function to send a POST request to Flask
     function sendAction(action) {
@@ -42,7 +43,10 @@
         sendAction("2");
     }
     function startAction() {
-        sendAction("1");
+        sendAction("1"); //patorol
+    }
+    function stopAction() {
+        sendAction("stop")
     }
 </script>
 {% endblock %}

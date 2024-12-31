@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracking Sessions</title>
+</head>
+<body>
+    <h1>Tracking Sessions</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Session ID</th>
+                <th>Start Timestamp</th>
+                <th>End Timestamp</th>
+                <th>Status</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+            <tr>
+                <td>{{ session[0] }}</td>
+                <td>{{ session[1] }}</td>
+                <td>{{ session[2] or "In Progress" }}</td>
+                <td>{{ session[3] }}</td>
+                <td><a href="/session/{{ session[0] }}">View Details</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
