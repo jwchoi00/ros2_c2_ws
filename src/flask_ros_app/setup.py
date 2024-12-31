@@ -21,7 +21,8 @@ setup(
         'console_scripts': [
             'ros2_flask_sub_image_with_db = flask_ros_app.ros2_flask_sub_image_with_db:main',
             'ros2_flask_sub_image_with_db_copy = flask_ros_app.ros2_flask_sub_image_with_db_copy:main',
-            'ros2_flask_sub_image_with_db_ver2 = flask_ros_app.ros2_flask_sub_image_with_db_ver2:main',
+            'ros2_flask_sub_image_with_db_final = flask_ros_app.ros2_flask_sub_image_with_db_final:main',
+            'ros2_flask_sub_image_with_db_final_copy = flask_ros_app.ros2_flask_sub_image_with_db_final_copy:main',
             'sub_msgs = flask_ros_app.sub_msgs:main',
             'sqlite3_save = flask_ros_app.sqlite3_save:main',
             'sqlite3_save_copy = flask_ros_app.sqlite3_save_copy:main',

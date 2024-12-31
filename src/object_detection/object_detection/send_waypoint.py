@@ -12,6 +12,7 @@ import tty
 from interface.msg import CenterPoint
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from geometry_msgs.msg import Twist
+from std_msgs.msg import String
 
 class WaypointFollower(Node):
     def __init__(self):
@@ -26,10 +27,16 @@ class WaypointFollower(Node):
         
         ### LEE
         self.pub_cmd_vel=self.create_publisher(Twist,'/cmd_vel',10)
-        self.sub_center_point = self.create_subscription(CenterPoint,'/center_point',self.callback_center_point,10) ## LEE
-        self.publisher = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 10) ## LEE
+        self.sub_center_point = self.create_subscription(CenterPoint,'/center_point',self.callback_center_point,10)
+        self.publisher = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 10) 
+        self.sub_nav_state = self.create_subscription(String,'/robot_actions',self.callback_nav_state,10)
+        self.pub_nav_state = self.create_publisher(String,'/robot_actions',10)
         self.detect_object = False
         self.center_p = Twist()
+        self.home_out = False
+        self.goal_seq = -1
+        self.cnt = 0
+        self.pose_init()
 
     def euler_to_quaternion(self, roll, pitch, yaw):
         # Convert Euler angles to a quaternion
@@ -263,16 +270,6 @@ class WaypointFollower(Node):
             self.point_index = feedback.current_waypoint
         else : 
             pass
-        
-
-        #self.get_logger().info(f'{self.point_index} : ')
-        #self.get_logger().info(f'{self.circuit}')
-        #self.get_logger().info(f'{len(self.waypoints) - 1}')
-        # 마지막 웨이포인트에 도달하면 첫 번째 웨이포인트로 돌아가도록 반복
-        '''if self.circuit == True and feedback.current_waypoint == len(self.waypoints) - 1:
-            self.get_logger().info('Last waypoint reached, resetting to first waypoint...')
-            self.send_goal(1)  # 다시 첫 번째 웨이포인트부터 시작하도록 호출
-            '''
 
     def cancel_goal(self):
         if self._goal_handle is not None:
@@ -298,14 +295,21 @@ class WaypointFollower(Node):
         else:
             self.get_logger().info('All waypoints completed successfully!')
         
+        ## home_out 후 바로 순회를 시키기 위한 로직
+        if self.home_out == False and self.goal_seq == '2':
+            print('iiiiiiiiiiiiii self.goal_seq: {0}'.format(self.goal_seq))
+            self.home_out = True
+            pub_state = String()
+            pub_state.data = '1'
+            self.pub_nav_state.publish(pub_state)
+            # self.send_goal(1)
+        
         # 순회가 활성화된 경우 무한 반복
         if self.circuit:
             self.get_logger().info('Restarting waypoint circuit...')
             self.send_goal(1)  # 순회를 다시 시작
             
     def callback_center_point(self,data):
-        
-        self.get_logger().info(f'{data.centerx}')
         if data.centerx != 0.0:
             if self.detect_object == False:
                 self.detect_object = True
@@ -332,82 +336,100 @@ class WaypointFollower(Node):
                     self.center_p.linear.x=0.0
                     self.center_p.angular.z=-data.centerx/500
                     self.pub_cmd_vel.publish(self.center_p)
+
         elif data.centerx == 0.0:
             if self.detect_object == True:
                 self.get_logger().info('물체 놓힘.')
                 self.center_p.linear.x=0.0
                 self.center_p.angular.z=-0.50
                 self.pub_cmd_vel.publish(self.center_p)
+       
+    def callback_nav_state(self,data):
+        self.goal_seq = data.data
+        # if self.goal_seq == '5':
+        #     initial_pose = PoseWithCovarianceStamped()
+        #     initial_pose.header.frame_id = 'map'  # The frame in which the pose is defined
+        #     initial_pose.header.stamp = self.get_clock().now().to_msg()
+
+        #         # Set the position (adjust these values as needed)
+        #     initial_pose.pose.pose.position.x = 0.0#0.1750425100326538 # X-coordinate
+        #     initial_pose.pose.pose.position.y = 0.070#0.05808566138148308 # Y-coordinate
+        #     initial_pose.pose.pose.position.z = 0.0  # Z should be 0 for 2D navigation
+
+        #         # Set the orientation (in quaternion form)
+        #     initial_pose.pose.pose.orientation = Quaternion(
+        #         x=0.0,
+        #         y=0.0,
+        #         z=0.0,#-0.0872,#0.0,  # 90-degree rotation in yaw (example)
+        #         w=1.0#0.9962#1.0#0.9989004975549108  # Corresponding quaternion w component
+        #     )
+
+        #         # Set the covariance values for the pose estimation
+        #     initial_pose.pose.covariance = [
+        #         0.25, 0.0, 0.0, 0.0, 0.0, 0.0,
+        #         0.0, 0.25, 0.0, 0.0, 0.0, 0.0,
+        #         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+        #         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+        #         0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+        #         0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891909122467
+        #     ]
+        #         # Publish the initial pose
+        #     self.publisher.publish(initial_pose)
+        if self.goal_seq == '2':
+            self.send_goal(2)
+            print('cur_data = 2')
+            # self.get_logger().info(f'cur_data = {data.data}')
+        elif self.goal_seq == '3':
+            self.send_goal(3)
+            self.home_out = False ## 홈으로 들어가니까 home_out 후에 바로 순회시키기 위해
+            print('cur_data = 3')
+        elif self.goal_seq == '1':
+            self.send_goal(1)
+            print('cur_data = 1')
+        elif self.goal_seq == '4':
+            self.get_logger().info('현재 목적지 취소')
+            self.cancel_goal()
+            print('cur_data = 4')
         
+    def pose_init(self):
+        initial_pose = PoseWithCovarianceStamped()
+        initial_pose.header.frame_id = 'map'  # The frame in which the pose is defined
+        initial_pose.header.stamp = self.get_clock().now().to_msg()
 
-def keyboard_listener(node):
-    old_settings = termios.tcgetattr(sys.stdin)
-    tty.setcbreak(sys.stdin.fileno())
-    try:
-        while True:
-            if select.select([sys.stdin], [], [], 0.1)[0]:
-                key = sys.stdin.read(1)
-                if key.lower() == 'a':
-                    node.get_logger().info('Key "a" pressed. Sending goal...')
-                    node.send_goal(1)
-                elif key.lower() == 's':
-                    node.get_logger().info('Key "s" pressed. Cancelling goal...')
-                    node.cancel_goal()
-                elif key.lower() == 'd':
-                    node.get_logger().info('Key "d" pressed. Sending goal...')
-                    node.send_goal(2)
-                elif key.lower() == 'f':
-                    node.get_logger().info('Key "f" pressed. Sending goal...')
-                    node.cancel_goal()
-                    node.send_goal(3)
-                elif key.lower() == 'z':
-                    initial_pose = PoseWithCovarianceStamped()
-                    initial_pose.header.frame_id = 'map'  # The frame in which the pose is defined
-                    initial_pose.header.stamp = node.get_clock().now().to_msg()
+            # Set the position (adjust these values as needed)
+        initial_pose.pose.pose.position.x = 0.0#0.1750425100326538 # X-coordinate
+        initial_pose.pose.pose.position.y = 0.070#0.05808566138148308 # Y-coordinate
+        initial_pose.pose.pose.position.z = 0.0  # Z should be 0 for 2D navigation
 
-                    # Set the position (adjust these values as needed)
-                    initial_pose.pose.pose.position.x = 0.0#0.1750425100326538 # X-coordinate
-                    initial_pose.pose.pose.position.y = 0.070#0.05808566138148308 # Y-coordinate
-                    initial_pose.pose.pose.position.z = 0.0  # Z should be 0 for 2D navigation
+            # Set the orientation (in quaternion form)
+        initial_pose.pose.pose.orientation = Quaternion(
+            x=0.0,
+            y=0.0,
+            z=0.0,#-0.0872,#0.0,  # 90-degree rotation in yaw (example)
+            w=1.0#0.9962#1.0#0.9989004975549108  # Corresponding quaternion w component
+        )
 
-                    # Set the orientation (in quaternion form)
-                    initial_pose.pose.pose.orientation = Quaternion(
-                        x=0.0,
-                        y=0.0,
-                        z=0.0,#-0.0872,#0.0,  # 90-degree rotation in yaw (example)
-                        w=1.0#0.9962#1.0#0.9989004975549108  # Corresponding quaternion w component
-                    )
-
-                    # Set the covariance values for the pose estimation
-                    initial_pose.pose.covariance = [
-                        0.25, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        0.0, 0.25, 0.0, 0.0, 0.0, 0.0,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891909122467
-                    ]
-                    # Publish the initial pose
-                    node.publisher.publish(initial_pose)
-                    
-                elif key.lower() == 'q':
-                    node.destroy_node()
-                    rclpy.shutdown()
-                
-    finally:
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+            # Set the covariance values for the pose estimation
+        initial_pose.pose.covariance = [
+            0.25, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.25, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891909122467
+        ]
+            # Publish the initial pose
+        print('zzzzzzzzzzzzzzzzzzzzzzz')
+        self.publisher.publish(initial_pose)
+        
 
 def main(args=None):
     rclpy.init(args=args)
     node = WaypointFollower()
-    
-    thread = threading.Thread(target=keyboard_listener, args=(node,), daemon=True)
-    thread.start()
-    
+    node.pose_init()
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
-

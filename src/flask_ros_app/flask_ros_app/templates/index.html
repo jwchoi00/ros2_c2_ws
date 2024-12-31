@@ -4,14 +4,18 @@
 <h1>Robot Video Feed</h1>
 <img src="{{ url_for('video_feed') }}" width="80%" alt="Video Feed">
 
+<!-- Data Display Section -->
+<!-- Data Display Section -->
+<div id="currentDataContainer">
+    <div id="currentData">No data available</div>
+</div>
+
 <!-- Buttons Section -->
 <div class="button-container">
     <button onclick="missAction()">놓침</button>
     <button onclick="captureAction()">포획</button>
     <button onclick="returnAction()">복귀</button>
-
-    <button onclick="homeoutAction()">창고나가기</button>
-    <button onclick="startAction()">출발</button>
+    <button onclick="homeoutAction()">시작</button>
     <button onclick="stopAction()">정지</button>
 </div>
 <script>
@@ -37,16 +41,25 @@
         sendAction("capture");
     }
     function returnAction() {
-        sendAction("3");
+        sendAction("return");
     }
     function homeoutAction() {
-        sendAction("2");
-    }
-    function startAction() {
-        sendAction("1"); //patorol
+        sendAction("homeout");
     }
     function stopAction() {
         sendAction("stop")
     }
+
+    // Fetch current data every second
+    function updateData() {
+        fetch("/current_data")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("currentData").innerText = data.data || "No data available";
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+    setInterval(updateData, 1000);
+    // Call updateData every second
 </script>
 {% endblock %}

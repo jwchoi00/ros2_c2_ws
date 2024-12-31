@@ -1,0 +1,47 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>Robot Video Feed</h1>
+<img src="{{ url_for('video_feed') }}" width="80%" alt="Video Feed">
+
+<!-- Buttons Section -->
+<div class="button-container">
+    <button onclick="missAction()">놓침</button>
+    <button onclick="captureAction()">포획</button>
+    <button onclick="returnAction()">복귀</button>
+    <button onclick="homeoutAction()">시작</button>
+    <button onclick="stopAction()">정지</button>
+</div>
+<script>
+    // JavaScript function to send a POST request to Flask
+    function sendAction(action) {
+        fetch('/action', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: action })
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Button action functions
+    function missAction() {
+        sendAction("miss");
+    }
+    function captureAction() {
+        sendAction("capture");
+    }
+    function returnAction() {
+        sendAction("return");
+    }
+    function homeoutAction() {
+        sendAction("homeout");
+    }
+    function stopAction() {
+        sendAction("stop")
+    }
+</script>
+{% endblock %}

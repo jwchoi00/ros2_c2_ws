@@ -64,6 +64,7 @@
             <tr>
                 <th>Tracking Session ID</th>
                 <th>Image ID</th>
+                <th>Timestamp</th>
                 <th>status</th>
                 <th>Image</th>
             </tr>
@@ -73,6 +74,7 @@
             <tr>
                 <td>{{ detail['tracking_session_id'] }}</td>
                 <td>{{ detail['id'] }}</td>
+                <td>{{ detail['timestamp'] }}</td>
                 <td>{{ detail['status'] }}</td>
                 <!--<td><img src="/image/{{ detail['id'] }}" alt="Captured Image"></td>-->
                 <td><a href="javascript:void(0);" onclick="openModal({{ detail['id'] }})">View Image</a></td>
